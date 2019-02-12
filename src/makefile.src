@@ -1,0 +1,24 @@
+PROJECT=..
+OBJDIR=$(PROJECT)/obj
+INCDIR=$(PROJECT)/include
+BINDIR=$(PROJECT)/bin
+
+CC = gcc
+CFLAGS = -g -I$(INCDIR)
+LFLAGS = -lpthread
+
+.DEFAULT_GOAL := cone
+
+_OBJ = cqueue/cqueue.o resource_pool/rpool.o
+OBJS = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
+
+cone: $(OBJS) main.c
+	$(CC) $(CFLAGS) -o $(BINDIR)/cone main.c $(OBJS) $(LFLAGS)
+
+$(OBJDIR)/%.o : %.c
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@ 
+
+clean:
+	rm -rvf $(BINDIR)/cone
+	rm -vf $(OBJS)
